@@ -1,11 +1,15 @@
+GET http://127.0.0.1:3000/pastel/100
+
 POST http://127.0.0.1:3000/pastel
 Content-Type: application/json
 
  {
-    "id": 8,
+    "id": 1,
     "nome": "Frango com Catupiry",
     "valor": 16.50,
     "tamanho": "Médio",
     "viagem": false,
     "imagem": "https://placehold.co/400"
 }
+
+DELETE http://127.0.0.1:3000/pastel

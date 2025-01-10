@@ -19,7 +19,7 @@ fastify.post('/pastel', (request, reply) => {
     const existe = pasteis.find(p => p.id === pastel.id);
 
     if (existe) {
-        return reply.status(400).send({
+        return reply.status(409).send({
             message: `O pastel de id: ${pastel.id} já existe`
         });
     }
@@ -49,12 +49,89 @@ fastify.get('/pastel/:id', (request, reply) => {
     const id = parseInt(request.params.id);
     const produtosBd = pasteis.find(p => p.id === id);
 
+    if(!produtosBd) {
+        return reply.status(404).send({
+            message: `O pastel de id: ${id} não existe`
+        });
+    }
+
     return {
         message: produtosBd ? `Retornou o pastel com o id: ${id}` : `Não encontrado pastel com o id: ${id}`,
         qtd: produtosBd ? 1 : 0,
         data: produtosBd || null,
     }
-})
+});
+
+// PUT - Atualiza completamente um pastel existente (substituindo todos os dados)
+fastify.put('/pastel/:id', (request, reply) => {
+    const id = parseInt(request.params.id);
+    const pastelAtualizado = request.body;
+
+    // Encontra o pastel com o ID fornecido
+    const index = pasteis.findIndex(p => p.id === id);
+
+    if (index === -1) {
+        return reply.status(404).send({
+            message: `O pastel de id: ${id} não existe para ser atualizado`
+        });
+    }
+
+    // Substitui o pastel encontrado pelo novo pastel
+    pasteis[index] = pastelAtualizado;
+
+    return {
+        message: `Pastel de id: ${id} atualizado com sucesso!`,
+        data: pastelAtualizado,
+        qtd: pasteis.length,
+    };
+});
+
+// PATCH - Atualiza parcialmente um pastel existente (somente os campos fornecidos)
+fastify.patch('/pastel/:id', (request, reply) => {
+    const id = parseInt(request.params.id);
+    const dadosParciais = request.body;
+
+    // Encontra o pastel com o ID fornecido
+    const index = pasteis.findIndex(p => p.id === id);
+
+    if (index === -1) {
+        return reply.status(404).send({
+            message: `O pastel de id: ${id} não existe para ser atualizado`
+        });
+    }
+
+    // Atualiza parcialmente o pastel
+    pasteis[index] = { ...pasteis[index], ...dadosParciais };
+
+    return {
+        message: `Pastel de id: ${id} atualizado parcialmente com sucesso!`,
+        data: pasteis[index],
+        qtd: pasteis.length,
+    };
+});
+
+// DELETE - Remove um pastel com o id fornecido
+fastify.delete('/pastel/:id', (request, reply) => {
+    const id = parseInt(request.params.id);
+
+    // Encontra o índice do pastel com o ID fornecido
+    const index = pasteis.findIndex(p => p.id === id);
+
+    if (index === -1) {
+        return reply.status(404).send({
+            message: `O pastel de id: ${id} não existe para ser removido`
+        });
+    }
+
+    // Remove o pastel do array
+    pasteis.splice(index, 1);
+
+    return {
+        message: `Pastel de id: ${id} removido com sucesso!`,
+        qtd: pasteis.length,
+        data: pasteis,
+    };
+});
 
 // 3 - Iniciando o servidor
 fastify.listen({ port: 3000 });
