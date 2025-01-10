@@ -29,17 +29,18 @@ fastify.post('/pastel', (request, reply) => {
 
     // Retorna todos os pastéis e a quantidade
     return {
-        data: pasteis,
+        message: 'Pastel adicionado com sucesso!',
         qtd: pasteis.length,
-        message: 'Pastel adicionado com sucesso!'
+        data: pasteis,
+
     };
 });
 
 fastify.get('/pasteis', (request, reply) => {
     return {
-        data: pasteis,
+        message: 'Retornou todos os pastéis!',
         qtd: pasteis.length,
-        message: 'Retornou todos os pastéis!'
+        data: pasteis,
     }
 });
 
@@ -49,9 +50,9 @@ fastify.get('/pastel/:id', (request, reply) => {
     const produtosBd = pasteis.find(p => p.id === id);
 
     return {
-        data: produtosBd || null,
+        message: produtosBd ? `Retornou o pastel com o id: ${id}` : `Não encontrado pastel com o id: ${id}`,
         qtd: produtosBd ? 1 : 0,
-        message: produtosBd ? `Retornou o pastel com o id: ${id}` : `Não encontrado pastel com o id: ${id}`
+        data: produtosBd || null,
     }
 })
 
