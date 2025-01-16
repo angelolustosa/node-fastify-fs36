@@ -110,6 +110,20 @@ fastify.patch('/pastel/:id', (request, reply) => {
     };
 });
 
+
+/* fastify.delete('/pastel/:id', (request, reply) => {
+    const id = parseInt(request.params.id);
+
+    const indicePastel = pasteis.findIndex(p => p.id === id);
+
+    if(indicePastel) {
+        pasteis.splice(indicePastel, 1)
+        return reply.status(204).send({ message: `Pastel de id: ${id} deletado com sucesso!` });
+    } else {
+        return reply.status(404).send({ message: `O pastel de id: ${id} não existe para ser deletado`});
+    }
+}) */
+
 // DELETE - Remove um pastel com o id fornecido
 fastify.delete('/pastel/:id', (request, reply) => {
     const id = parseInt(request.params.id);
